@@ -14,6 +14,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
+import { api } from "configs";
 import useDateTime from "hooks/useDateTime";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -34,7 +35,11 @@ const ViewEmployeeDetail = ({ isOpen, onOpen, onClose, data }) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data.userType);
+    try {
+      const res = await api.patch("");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -50,7 +55,7 @@ const ViewEmployeeDetail = ({ isOpen, onOpen, onClose, data }) => {
           <DrawerOverlay />
           <DrawerContent>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <DrawerCloseButton /> <DrawerHeader> Leave Detail</DrawerHeader>
+              <DrawerCloseButton /> <DrawerHeader> User Detail</DrawerHeader>
               <DrawerBody>
                 <FormLabel htmlFor="fullName">Full Name</FormLabel>{" "}
                 <Text>{data?.fullName}</Text>
@@ -83,16 +88,13 @@ const ViewEmployeeDetail = ({ isOpen, onOpen, onClose, data }) => {
                 {editToggler ? (
                   <>
                     <Select
-                      defaultValue={1}
+                      defaultValue={data?.userType}
                       {...register("userType", {
                         required: "This is required",
-                        minLength: {
-                          value: 4,
-                        },
                       })}
                     >
-                      <option value={"admin"}>Admin</option>
-                      <option value={"user"}>User</option>
+                      <option value="admin">Admin</option>
+                      <option value="user">User</option>
                     </Select>
                     <FormErrorMessage>
                       {errors.username && errors.username.message}
@@ -117,7 +119,9 @@ const ViewEmployeeDetail = ({ isOpen, onOpen, onClose, data }) => {
                   <Button onClick={editTogglerHandler}>Edit</Button>
                 )}
 
-                <Button colorScheme="orange">Save</Button>
+                <Button colorScheme="orange" type="submit">
+                  Save
+                </Button>
               </DrawerFooter>
             </form>
           </DrawerContent>{" "}
